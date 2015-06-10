@@ -22,6 +22,9 @@ class Template {
 	public function Set($var, $value) {
 		$this->vars[$var] = $value;
 	}
+	public function Merge($vars) {
+		$this->vars = array_merge($this->vars, $vars);
+	}
 	public function Render() {
 		ob_start();
 		extract($this->vars);
@@ -38,5 +41,14 @@ class Template {
 	protected function Template($filename) {
 		$tpl = new Template($filename, $this->vars);
 		$tpl->Output();
+	}
+	protected static function Get_In_Array(array $arr, $var) {
+		if (!isset($arr)) {
+			return false;
+		}
+		if (!isset($arr[$var])) {
+			return false;
+		}
+		return $arr[$var];
 	}
 }

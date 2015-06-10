@@ -106,4 +106,11 @@ class Form {
 		}
 		return $result;
 	}
+	public function Values() {
+		$result = array();
+		foreach ($this->fields as $field) {
+			$result[$field->Name] = $field->Value;
+		}
+		return $result;
+	}
 }

@@ -13,4 +13,7 @@ class Input {
 	public static function Post($varname) {
 		return filter_input(INPUT_POST, $varname, FILTER_SANITIZE_STRING);
 	}
+	public static function Get($varname) {
+		return filter_input(INPUT_GET, $varname, FILTER_SANITIZE_STRING);
+	}
 }

@@ -42,23 +42,23 @@ class Template {
 		$tpl = new Template($filename, $this->vars);
 		$tpl->Output();
 	}
-	protected static function Get_In_Array(array $arr, $var) {
-		if (!isset($arr)) {
+	protected function Get_In_Array($arr, $var) {
+		if (!isset($this->vars[$arr])) {
 			return false;
 		}
-		if (!isset($arr[$var])) {
+		if (!isset($this->vars[$arr][$var])) {
 			return false;
 		}
-		return $arr[$var];
+		return $this->vars[$arr][$var];
 	}
-	protected static function Isset_Print($var) {
-		if (isset($var)) {
-			echo($var);
+	protected function Isset_Print($var) {
+		if (isset($this->vars[$var])) {
+			echo($this->vars[$var]);
 		}
 	}
-	protected static function Isset_Print_Value($var) {
-		if (isset($var)) {
-			echo('value="'.$var.'"');
+	protected function Isset_Print_Value($var) {
+		if (isset($this->vars[$var])) {
+			echo('value="'.$this->vars[$var].'"');
 		}
 	}
 }

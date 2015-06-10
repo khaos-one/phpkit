@@ -16,6 +16,7 @@ class Form_Field {
 	const ERROR_VALIDATION_REGEX 	= 8;
 	const ERROR_MAX_LENGTH			= 16;
 	const ERROR_MIN_LENGTH			= 32;
+	const ERROR_NOT_EQUAL			= 64;
 	
 	public $Name;
 	public $Value;
@@ -82,9 +83,13 @@ class Form_Field {
 
 class Form {
 	private $fields;
+	private $equals;
+	private $custom_validators;
 	public $Errors;
 	public function __construct() {
 		$this->fields = array();
+		$this->equals = array();
+		$this->custom_validators = array();
 		$this->Errors = array();
 	}
 	public function Field(Form_Field $field) {
@@ -95,6 +100,12 @@ class Form {
 			$field->Load_Post();
 		}
 	}
+	public function Must_Equal($field1, $field2) {
+		$this->equals[] = array($field1->Name, $field2->Name);
+	}
+	public function Custom_Validators($name, $fn, $args = null) {
+		$this->custom_validators[$name] = array($fn, $args);
+	}
 	public function Validate() {
 		$result = true;
 		foreach ($this->fields as $field) {
@@ -103,6 +114,30 @@ class Form {
 				$this->Errors[$field->Name] = $field->Errors;
 			}
 			$result = $result & $res;
+		}
+		foreach ($this->equals as $v) {
+			if (isset($this->fields[$v[0]]) && isset($this->fields[$v[1]])) {
+				if ($this->fields[$v[0]]->Value !== $this->fields[$v[1]]->Value) {
+					if (!isset($this->Errors[$v[0]])) {
+						$this->Errors[$v[0]] = Form_Field::ERROR_NOT_EQUAL;
+					} else {
+						$this->Errors[$v[0]] |= Form_Field::ERROR_NOT_EQUAL;
+					}
+					if (!isset($this->Errors[$v[1]])) {
+						$this->Errors[$v[1]] = Form_Field::ERROR_NOT_EQUAL;
+					} else {
+						$this->Errors[$v[1]] |= Form_Field::ERROR_NOT_EQUAL;
+					}
+					$result = $result & false;
+				}
+			}
+		}
+		foreach ($this->custom_validators as $k => $v) {
+			$ret = call_user_func_array($v[0], array_merge(array($this), $v[1]));
+			if (!$ret) {
+				$this->Errors[$k] = $ret;
+				$result = $result & false;
+			}
 		}
 		return $result;
 	}

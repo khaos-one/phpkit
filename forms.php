@@ -82,8 +82,10 @@ class Form_Field {
 
 class Form {
 	private $fields;
+	public $Errors;
 	public function __construct() {
 		$this->fields = array();
+		$this->Errors = array();
 	}
 	public function Field(Form_Field $field) {
 		$this->fields[$field->Name] = $field;
@@ -96,7 +98,11 @@ class Form {
 	public function Validate() {
 		$result = true;
 		foreach ($this->fields as $field) {
-			$result = $result & $field->Validate();
+			$res = $field->Validate();
+			if (!$res) {
+				$this->Errors[$field->Name] = $field->Errors;
+			}
+			$result = $result & $res;
 		}
 		return $result;
 	}

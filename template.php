@@ -12,6 +12,7 @@ class Template {
 		if (!is_readable($filename)) {
 			throw new Exception("Template file `$filename` is unreadable.");
 		}
+		$this->filename = $filename;
 		if (isset($vars)) {
 			$this->vars = $vars;
 		} else {

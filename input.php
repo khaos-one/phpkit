@@ -6,6 +6,7 @@
 if (!defined('EXEC')) { http_response_code(403); die('No direct script access is allowed;'); }
 
 class Input {
+	private static $ip;
 	public static function Is_Ajax_Request() {
 		return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
 			strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
@@ -27,5 +28,18 @@ class Input {
 	}
 	public static function Is_Head() {
 		return self::Method() === 'head';
+	}
+	public static function Ip() {
+		if (isset(self::$ip)) {
+			return self::$ip;
+		}
+		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+			self::$ip = $_SERVER['HTTP_CLIENT_IP'];
+		} else if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+			self::$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		} else {
+			self::$ip = $_SERVER['REMOTE_ADDR'];
+		}
+		return self::$ip;
 	}
 }

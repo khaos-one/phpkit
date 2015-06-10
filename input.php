@@ -16,4 +16,16 @@ class Input {
 	public static function Get($varname) {
 		return filter_input(INPUT_GET, $varname, FILTER_SANITIZE_STRING);
 	}
+	public static function Method() {
+		return tolower($_SERVER['REQUEST_METHOD']);
+	}
+	public static function Is_Post() {
+		return self::Method() === 'post';
+	}
+	public static function Is_Get() {
+		return self::Method() === 'get';
+	}
+	public static function Is_Head() {
+		return self::Method() === 'head';
+	}
 }

@@ -23,6 +23,7 @@ class Template {
 	}
 	public function Render() {
 		ob_start();
+		extract($this->vars);
 		include($this->filename);
 		return ob_get_clean();
 	}

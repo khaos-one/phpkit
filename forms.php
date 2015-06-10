@@ -8,12 +8,15 @@ if (!defined('EXEC')) { http_response_code(403); die('No direct script access is
 require_once('input.php');
 
 class Form_Field {
+	const VALIDATE_REGEX_EMAIL = '\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b';
+	
 	public $Name;
 	public $Value;
 	public $Required;
 	public $Max_Length;
 	public $Min_Length;
 	public $Validation_Fn;
+	public $Validation_Filter_Var;
 	public $Validation_Regex;
 	
 	public function __construct($name, $required = false) {
@@ -30,6 +33,8 @@ class Form_Field {
 		$result = true;
 		if (isset($this->Validation_Fn) && is_callable($this->Validation_Fn)) {
 			$result = call_user_func($this->Validation_Fn);
+		} else if (isset($this->Validation_Filter_Var)) {
+			$result = filter_var($this->Value, $this->Validation_Filter_Var);
 		} else if (isset($this->Validation_Regex)) {
 			$result = preg_match($this->Validation_Regex, $this->Value);
 		}

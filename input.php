@@ -17,7 +17,7 @@ class Input {
 		return filter_input(INPUT_GET, $varname, FILTER_SANITIZE_STRING);
 	}
 	public static function Method() {
-		return tolower($_SERVER['REQUEST_METHOD']);
+		return strtolower($_SERVER['REQUEST_METHOD']);
 	}
 	public static function Is_Post() {
 		return self::Method() === 'post';

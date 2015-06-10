@@ -51,4 +51,14 @@ class Template {
 		}
 		return $arr[$var];
 	}
+	protected static function Isset_Print($var) {
+		if (isset($var)) {
+			echo($var);
+		}
+	}
+	protected static function Isset_Print_Value($var) {
+		if (isset($var)) {
+			echo('value="'.$var.'"');
+		}
+	}
 }

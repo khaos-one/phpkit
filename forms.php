@@ -10,6 +10,13 @@ require_once('input.php');
 class Form_Field {
 	const VALIDATE_REGEX_EMAIL = '\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b';
 	
+	const ERROR_REQUIRED 			= 1;
+	const ERROR_VALIDATION_FN 		= 2;
+	const ERROR_VALIDATION_FILTER 	= 4;
+	const ERROR_VALIDATION_REGEX 	= 8;
+	const ERROR_MAX_LENGTH			= 16;
+	const ERROR_MIN_LENGTH			= 32;
+	
 	public $Name;
 	public $Value;
 	public $Required;
@@ -18,31 +25,56 @@ class Form_Field {
 	public $Validation_Fn;
 	public $Validation_Filter_Var;
 	public $Validation_Regex;
+	public $Errors;
 	
 	public function __construct($name, $required = false) {
 		$this->Name = $name;
 		$this->Required = $required;
+		$this->Errors = 0;
 	}
 	public function Load_Post() {
 		$this->Value = Input::Post($this->Name);
 	}
 	public function Validate() {
 		if (!isset($this->Value)) {
+			if ($this->Required) {
+				$this->Errors |= self::ERROR_REQUIRED;
+			}
 			return !$this->Required;
 		}
 		$result = true;
 		if (isset($this->Validation_Fn) && is_callable($this->Validation_Fn)) {
-			$result = call_user_func($this->Validation_Fn);
+			$res = call_user_func($this->Validation_Fn);
+			if (!$res) {
+				$this->Errors |= self::ERROR_VALIDATION_FN;
+				$result = false;
+			}
 		} else if (isset($this->Validation_Filter_Var)) {
-			$result = filter_var($this->Value, $this->Validation_Filter_Var);
+			$res = filter_var($this->Value, $this->Validation_Filter_Var);
+			if (!$res) {
+				$this->Errors |= self::ERROR_VALIDATION_FILTER;
+				$result = false;
+			}
 		} else if (isset($this->Validation_Regex)) {
-			$result = preg_match($this->Validation_Regex, $this->Value);
+			$res = preg_match($this->Validation_Regex, $this->Value);
+			if (!$res) {
+				$this->Errors |= self::ERROR_VALIDATION_REGEX;
+				$result = false;
+			}
 		}
 		if (isset($this->Max_Length)) {
-			$result = strlen($this->Value) <= $this->Max_Length;
+			$res = strlen($this->Value) <= $this->Max_Length;
+			if (!$res) {
+				$this->Errors |= self::ERROR_MAX_LENGTH;
+				$result = false;
+			}
 		}
 		if (isset($this->Min_Length)) {
-			$result = strlen($this->Value) >= $this->Min_Length;
+			$res = strlen($this->Value) >= $this->Min_Length;
+			if (!$res) {
+				$this->Errors |= self::ERROR_MIN_LENGTH;
+				$result = false;
+			}
 		}
 		return $result;
 	}

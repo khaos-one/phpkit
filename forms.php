@@ -1,7 +1,12 @@
 <?php
-	
-/** Class for managing HTML forms submission. */
-/** By Egor 'khaos' Zelensky, 2015. */
+
+/**
+ * This module contains objects for managing
+ * HTML forms submission.
+ *
+ * @author Egor 'khaos' Zelensky <i@khaos.su>
+ * @package phpkit
+ */
 
 if (!defined('EXEC')) { http_response_code(403); die('No direct script access is allowed;'); }
 

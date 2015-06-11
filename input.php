@@ -1,7 +1,12 @@
 <?php
-	
-/** Class for managing script's input. */
-/** By Egor 'khaos' Zelensky, 2015. */
+
+/**
+ * Module containing object for managing
+ * script's input.
+ *
+ * @author Egor 'khaos' Zelensky <i@khaos.su>
+ * @package phpkit
+ */
 
 if (!defined('EXEC')) { http_response_code(403); die('No direct script access is allowed;'); }
 

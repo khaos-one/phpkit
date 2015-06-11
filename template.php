@@ -61,4 +61,12 @@ class Template {
 			echo('value="'.$this->vars[$var].'"');
 		}
 	}
+	protected static function Render_Template($filename, $vars = null) {
+		$tpl = new Template($filename, $vars);
+		return $tpl->Render();
+	}
+	protected static function Output_Template($filename, $vars = null) {
+		$tpl = new Template($filename, $vars);
+		$tpl->Output();
+	}
 }

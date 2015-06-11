@@ -85,7 +85,7 @@ class Form {
 	private $fields;
 	private $equals;
 	private $custom_validators;
-	public $Errors;
+	private $Errors;
 	public function __construct() {
 		$this->fields = array();
 		$this->equals = array();
@@ -103,8 +103,14 @@ class Form {
 	public function Must_Equal($field1, $field2) {
 		$this->equals[] = array($field1->Name, $field2->Name);
 	}
-	public function Custom_Validators($name, $fn, $args = null) {
+	public function Custom_Validator($name, $fn, $args = null) {
 		$this->custom_validators[$name] = array($fn, $args);
+	}
+	public function Error($name, $value = true) {
+		$this->Errors[$name] = $value;
+	}
+	public function Have_Errors() {
+		return !empty($this->Errors);
 	}
 	public function Validate() {
 		$result = true;
@@ -147,5 +153,8 @@ class Form {
 			$result[$field->Name] = $field->Value;
 		}
 		return $result;
+	}
+	public function Errors() {
+		return $this->Errors;
 	}
 }

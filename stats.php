@@ -27,7 +27,7 @@ class Stats {
 		$this->request_uri = Input::Request_Uri();
 		$this->user_agent = Input::User_Agent();
 		$this->referrer = Input::Referrer();
-		$this->search_phrase = self::Try_Extract_Search_Query($referrer);
+		$this->search_phrase = self::Try_Extract_Search_Query($this->referrer);
 	}
 	
 	public static function Try_Extract_Search_Query($referrer) {

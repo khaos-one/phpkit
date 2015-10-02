@@ -26,6 +26,8 @@ class CSV {
 	public static function From_File($filepath, $delimiter = ';', $enclosure = '"') {
 		$instance = new CSV($delimiter, $enclosure);
 		if (($fh = fopen($filepath. 'r')) !== false) {
+			// Skip UTF8 BOM.
+			fseek($fh, 3);
 			$instance->header = fgetcsv($fh, 0, $instance->delimiter, $instance->enclosure);
 			$instancev->content = array();
 			while (($data = fgetcsv($fh, 0, $instance->delimiter, $instance->enclosure)) !== false) {
@@ -47,7 +49,7 @@ class CSV {
 		else {
 			if (($fh = fopen($filepath, 'w+')) !== false) {
 				// UTF-8 Byte Order Mark.
-				fwrite($fh, chr(0xbf) . chr(0xBB) . chr(0xBF));
+				fwrite($fh, "\xEF\xBB\xBF");
 				fputcsv($fh, $this->header, $this->delimiter, $this->enclosure);
 				for ($i = 0; $i < count($this->content); $i++) {
 					fputcsv($fh, array_values($this->content[$i]), $this->delimiter, $this->enclosure);

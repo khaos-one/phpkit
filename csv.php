@@ -46,6 +46,8 @@ class CSV {
 		} 
 		else {
 			if (($fh = fopen($filepath, 'w+')) !== false) {
+				// UTF-8 Byte Order Mark.
+				fwrite($fh, chr(0xbf) . chr(0xBB) . chr(0xBF));
 				fputcsv($fh, $this->header, $this->delimiter, $this->enclosure);
 				for ($i = 0; $i < count($this->content); $i++) {
 					fputcsv($fh, array_values($this->content[$i]), $this->delimiter, $this->enclosure);

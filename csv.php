@@ -50,6 +50,16 @@ class CSV {
 		}
 	}
 	
+	public function Append_To_File($filepath) {
+		if (($fh = fopen($filepath, 'a')) !== false) {
+			fputcsv($fh, $this->header, $this->delimiter, $this->enclosure);
+			for ($i = 0; $i < count($this->content); $i++) {
+				fputcsv($fh, array_values($this->content[$i]), $this->delimiter, $this->enclosure);
+			}
+			fclose($fh);
+		}
+	}
+	
 	public function Add($line) {
 		for ($i = count($line); $i < count($this->header); $i++) {
 			$line[] = '';

@@ -31,7 +31,7 @@ class Stats {
 	}
 	
 	public static function Try_Extract_Search_Query($referrer) {
-		static $query_pattern = '/(?:q|query|s|as_q|words|p|text|etext)=([%a-zA-Z0-9]+)/';
+		static $query_pattern = '/(?:q|query|s|as_q|words|p|text|etext)=([^&]+)/';
 		if (!$referrer) {
 			return null;
 		}

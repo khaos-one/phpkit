@@ -19,6 +19,8 @@ class CSV {
 	public function __construct($delimiter = ',', $enclosure = '"') {
 		$this->delimiter = $delimiter;
 		$this->enclosure = $enclosure;
+		$this->header = array();
+		$this->content = array();
 	}
 	
 	public static function From_File($filepath, $delimiter = ',', $enclosure = '"') {

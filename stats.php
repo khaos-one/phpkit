@@ -14,6 +14,9 @@ require_once('encoding.php');
 class Stats {
 	public static function Try_Extract_Search_Query($referrer) {
 		static $query_pattern = '/(?:q|query|s|as_q|words|p|text|etext)=([%a-zA-Z0-9]+)/';
+		if (!$referrer) {
+			return null;
+		}
 		$matches = array();
 		if (preg_match($query_pattern, $referrer, $matches)) {
 			return Encoding::Normalize(urldecode($matches[1]));

@@ -47,4 +47,14 @@ class CSV {
 			fclose($fh);
 		}
 	}
+	
+	public function Add($line) {
+		for ($i = count($line); $i < count($this->header); $i++) {
+			$line[] = '';
+		}
+		$cnt = array();
+		for ($i = 0; $i < count($this->header); $i++) {
+			$cnt[$this->header[$i]] = $line[$i];
+		}
+	}
 }

@@ -16,14 +16,14 @@ class CSV {
 	public $header;
 	public $content;
 	
-	public function __construct($delimiter = ',', $enclosure = '"') {
+	public function __construct($delimiter = ';', $enclosure = '"') {
 		$this->delimiter = $delimiter;
 		$this->enclosure = $enclosure;
 		$this->header = array();
 		$this->content = array();
 	}
 	
-	public static function From_File($filepath, $delimiter = ',', $enclosure = '"') {
+	public static function From_File($filepath, $delimiter = ';', $enclosure = '"') {
 		$instance = new CSV($delimiter, $enclosure);
 		if (($fh = fopen($filepath. 'r')) !== false) {
 			$instance->header = fgetcsv($fh, 0, $instance->delimiter, $instance->enclosure);
@@ -41,18 +41,23 @@ class CSV {
 	}
 	
 	public function To_File($filepath) {
-		if (($fh = fopen($filepath, 'w')) !== false) {
-			fputcsv($fh, $this->header, $this->delimiter, $this->enclosure);
-			for ($i = 0; $i < count($this->content); $i++) {
-				fputcsv($fh, array_values($this->content[$i]), $this->delimiter, $this->enclosure);
+		if (file_exists($filepath)) {
+			$this->Append_To_File($filepath);
+		} 
+		else {
+			if (($fh = fopen($filepath, 'w+')) !== false) {
+				fputcsv($fh, $this->header, $this->delimiter, $this->enclosure);
+				for ($i = 0; $i < count($this->content); $i++) {
+					fputcsv($fh, array_values($this->content[$i]), $this->delimiter, $this->enclosure);
+				}
+				fclose($fh);
 			}
-			fclose($fh);
 		}
 	}
 	
 	public function Append_To_File($filepath) {
-		if (($fh = fopen($filepath, 'a')) !== false) {
-			fputcsv($fh, $this->header, $this->delimiter, $this->enclosure);
+		if (($fh = fopen($filepath, 'a+')) !== false) {
+			//fputcsv($fh, $this->header, $this->delimiter, $this->enclosure);
 			for ($i = 0; $i < count($this->content); $i++) {
 				fputcsv($fh, array_values($this->content[$i]), $this->delimiter, $this->enclosure);
 			}
@@ -68,5 +73,6 @@ class CSV {
 		for ($i = 0; $i < count($this->header); $i++) {
 			$cnt[$this->header[$i]] = $line[$i];
 		}
+		$this->content[] = $cnt;
 	}
 }

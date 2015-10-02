@@ -22,6 +22,12 @@ class Input {
 	public static function Get($varname) {
 		return filter_input(INPUT_GET, $varname, FILTER_SANITIZE_STRING);
 	}
+	public static function Server($varname) {
+		return filter_input(INPUT_SERVER, $varname, FILTER_SANITIZE_STRING);
+	}
+	public static function Session($varname) {
+		return filter_input(INPUT_SESSION, $varname, FILTER_SANITIZE_STRING);
+	}
 	public static function Method() {
 		return strtolower($_SERVER['REQUEST_METHOD']);
 	}
@@ -46,5 +52,14 @@ class Input {
 			self::$ip = $_SERVER['REMOTE_ADDR'];
 		}
 		return self::$ip;
+	}
+	public static function Request_Uri() {
+		return self::Server('REQUEST_URI');
+	}
+	public static function User_Agent() {
+		return self::Server('HTTP_USER_AGENT');
+	}
+	public static function Referrer() {
+		return self::Server('HTTP_REFERER');
 	}
 }

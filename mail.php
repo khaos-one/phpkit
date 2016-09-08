@@ -21,6 +21,9 @@ class Mail {
 	}
 	
 	public function Send() {
+		if (!empty($this->From)) {
+			$this->Headers['From'] = $this->From;
+		}
 		$headers = '';
 		foreach ($this->Headers as $k => $v) {
 			$headers .= $k . ': ' . $v . "\r\n";

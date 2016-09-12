@@ -15,22 +15,38 @@ class Mail {
 	public $Subject;
 	public $Headers;
 	public $Content;
+	public $Error;
 	
 	public function __construct() {
 		$this->Headers = array();
+		$this->Error = null;
+	}
+
+	public function Has_Error() {
+		return !empty($this->Error);
 	}
 	
 	public function Send() {
 		if (!empty($this->From)) {
 			$this->Headers['From'] = $this->From;
 		}
+		
 		$headers = '';
+		
 		foreach ($this->Headers as $k => $v) {
 			$headers .= $k . ': ' . $v . "\r\n";
 		}
+		
 		if (is_array($this->To)) {
 			$this->To = implode(',', $this->To);
 		}
-		return mail($this->To, $this->Subject, $this->Content, $headers);
+		
+		if (mail($this->To, $this->Subject, $this->Content, $headers) === false) {
+			$this->Error = error_get_last();
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 }

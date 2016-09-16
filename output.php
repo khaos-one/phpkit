@@ -10,6 +10,22 @@
 if (!defined('EXEC')) { http_response_code(403); die('No direct script access is allowed;'); }
 
 class Output {
+	private static $instance = null;
+
+	public static function Instance() {
+		if (self::$instance === null) {
+			self::$instance = new Output();
+		}
+
+		return self::$instance;
+	}
+
+	public static function Response_Code_And_Exit($response_code) {
+		$out = self::Instance();
+		$out->Response_Code($response_code);
+		$out->End();
+	}
+
 	private $response_code;
 	private $content;
 	private $headers;

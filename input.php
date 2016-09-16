@@ -10,6 +10,8 @@
 
 if (!defined('EXEC')) { http_response_code(403); die('No direct script access is allowed;'); }
 
+require_once('string_helper.php');
+
 class Input {
 	private static $ip;
 	public static function Is_Ajax_Request() {
@@ -61,5 +63,20 @@ class Input {
 	}
 	public static function Referrer() {
 		return self::Server('HTTP_REFERER');
+	}
+	public static function Path_Info() {
+		return self::Server('PATH_INFO');
+	}
+	public static function Path_Info_Array() {
+		$path = self::Path_Info();
+		return String_Helper::Split_Trim($path, '/');
+	}
+	public static function Query_String() {
+		return self::Server('QUERY_STRING');
+	}
+	public static function Query_String_Array() {
+		$arr = array();
+		parse_str(self::Query_String(), $arr);
+		return $arr;
 	}
 }

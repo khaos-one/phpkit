@@ -42,8 +42,10 @@ class Router {
         else {
             require_once($controller_file);
 
+            $actual_name = $this->Controller_Name . '_Controller';
+
             try {
-                $this->Controller = new $this->Controller_Name();
+                $this->Controller = new $actual_name;
                 $this->Controller->{$this->Controller_Method}();
             }
             catch (Exception $e) {

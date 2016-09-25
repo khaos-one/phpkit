@@ -26,21 +26,35 @@ class Router {
         //$this->Names_Transform = self::Default_Names_Transform;
     }
 
+    public function Invoke_Hard_Mapping(array $map) {
+        $pathinfo = Input::Get('path');
+
+        if (!empty($pathinfo)) {
+            // TODO: Make the rest.
+        }
+    }
+
     public function Invoke_Default() {
-        $pathinfo = Input::Request_Uri_Array();
-        
-        if (count($pathinfo) > 0) {
-            // Not yet supported.
-            //$this->Controller_Name = $this->Names_Transform($pathinfo[0]);
-            $this->Controller_Name = self::Default_Names_Transform($pathinfo[0]);
+        $pathinfo = Input::Get('path');
+
+        if (!empty($pathinfo)) {
+            if (count($pathinfo) > 0) {
+                // Not yet supported.
+                //$this->Controller_Name = $this->Names_Transform($pathinfo[0]);
+                $this->Controller_Name = self::Default_Names_Transform($pathinfo[0]);
+            }
+
+            if (count($pathinfo) > 1) {
+                // Not yet supported.
+                //$this->Controller_Method = $this->Names_Transform($pathinfo[1]);
+                $this->Controller_Method = self::Default_Names_Transform($pathinfo[1]);
+            }
         }
 
-        if (count($pathinfo) > 1) {
-            // Not yet supported.
-            //$this->Controller_Method = $this->Names_Transform($pathinfo[1]);
-            $this->Controller_Method = self::Default_Names_Transform($pathinfo[1]);
-        }
+        $this->Internal_Invoke();
+    }
 
+    private function Internal_Invoke() {
         $controller_file = $this->Controllers_Direcotory . DIRECTORY_SEPARATOR . strtolower($this->Controller_Name) . '.php';
 
         if (!is_readable($controller_file)) {

@@ -32,12 +32,12 @@ class Log {
 
     public static function Entry_Message(int $priority, string $message, $output_code = -1) {
         $args = array_slice(func_get_arg(), 2);
-        $entry = vsprintf($this->priorities[$priority] . ': ' . $message, $args);
+        $entry = vsprintf(self::priorities[$priority] . ': ' . $message, $args);
         error_log($entry);
     }
 
     public static function Entry_Exception(int $priority, Exception $e) {
-        $entry = sprintf('%s: %s', $this->priorities[$priority], $e->getMessage());
+        $entry = sprintf('%s: %s', self::priorities[$priority], $e->getMessage());
         error_log($entry);
     }
 }

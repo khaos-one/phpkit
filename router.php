@@ -55,7 +55,7 @@ class Router {
     }
 
     private function Internal_Invoke() {
-        $controller_file = $this->Controllers_Direcotory . DIRECTORY_SEPARATOR . strtolower($this->Controller_Name) . '.php';
+        $controller_file = $this->Controllers_Directory . DIRECTORY_SEPARATOR . strtolower($this->Controller_Name) . '.php';
 
         if (!is_readable($controller_file)) {
             Log::Entry_Message(Log::ERROR, 'Controller file `%s` not found or not readable!', $controller_file);

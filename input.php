@@ -69,7 +69,23 @@ class Input {
 	}
 	public static function Path_Info_Array() {
 		$path = self::Path_Info();
-		return String_Helper::Split_Trim($path, '/');
+
+		if ($path != null) {
+			return String_Helper::Split_Trim($path, '/');
+		}
+		else {
+			return '';
+		}
+	}
+	public static function Request_Uri_Array() {
+		$path = self::Request_Uri();
+
+		if ($path != null) {
+			return String_Helper::Split_Trim($path, '/');
+		}
+		else {
+			return '';
+		}
 	}
 	public static function Query_String() {
 		return self::Server('QUERY_STRING');

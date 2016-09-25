@@ -27,7 +27,7 @@ class Router {
     }
 
     public function Invoke_Default() {
-        $pathinfo = Input::Path_Info_Array();
+        $pathinfo = Input::Request_Uri_Array();
         
         if (count($pathinfo) > 0) {
             // Not yet supported.
@@ -55,6 +55,8 @@ class Router {
             try {
                 $this->Controller = new $actual_name;
                 $this->Controller->{$this->Controller_Method}();
+                $out = Output::Instance();
+                $out->Flush();
             }
             catch (Exception $e) {
                 Log::Entry_Exception(Log::Error, $e);

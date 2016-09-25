@@ -49,6 +49,14 @@ class Output {
 	public function Json_Content(array $content) {
 		$this->content = json_encode($content);
 	}
+
+	public function Header(string $name, string $value) {
+		$this->headers[$name] = $value;
+	}
+
+	public function Content_Type(string $value) {
+		$this->headers['Content-Type'] = $value;
+	}
 	
 	public function Flush() {
 		if (isset($this->response_code)) {

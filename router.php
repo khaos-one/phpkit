@@ -18,19 +18,27 @@ class Router {
     public $Controllers_Directory = './controllers';
     public $Controller_Name = 'Default';
     public $Controller_Method = 'Default';
-    public $Names_Transform = self::Default_Names_Transform;
+    public $Names_Transform = null;
 
     public $Controller = null;
+
+    public function __construct() {
+        //$this->Names_Transform = self::Default_Names_Transform;
+    }
 
     public function Invoke_Default() {
         $pathinfo = Input::Path_Info_Array();
         
         if (count($pathinfo) > 0) {
-            $this->Controller_Name = $this->Names_Transform($pathinfo[0]);
+            // Not yet supported.
+            //$this->Controller_Name = $this->Names_Transform($pathinfo[0]);
+            $this->Controller_Name = self::Default_Names_Transform($pathinfo[0]);
         }
 
         if (count($pathinfo) > 1) {
-            $this->Controller_Method = $this->Names_Transform($pathinfo[1]);
+            // Not yet supported.
+            //$this->Controller_Method = $this->Names_Transform($pathinfo[1]);
+            $this->Controller_Method = self::Default_Names_Transform($pathinfo[1]);
         }
 
         $controller_file = $this->Controllers_Direcotory . DIRECTORY_SEPARATOR . strtolower($this->Controller_Name) . '.php';

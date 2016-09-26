@@ -82,7 +82,8 @@ class Router {
                         }
                         else {
                             $this->Controller->{$this->Controller_Method}();
-                            Output::Flush();
+                            $out = Output::Instance();
+                            $out->Flush();
                         }
                     }
                     catch (Exception $e) {

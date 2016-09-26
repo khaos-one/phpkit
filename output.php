@@ -26,6 +26,16 @@ class Output {
 		$out->End();
 	}
 
+	public static function Flush() {
+		$inst = self::Instace();
+		$inst->Flush();
+	}
+
+	public static function Content($content) {
+		$inst = self::Instance();
+		$inst->Content($content);
+	}
+
 	private $response_code;
 	private $content;
 	private $headers;

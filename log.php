@@ -30,14 +30,15 @@ class Log {
         self::DEBUG => 'debug'
     );
 
-    public static function Entry_Message(int $priority, string $message, $output_code = -1) {
-        $args = array_slice(func_get_arg(), 2);
-        $entry = vsprintf(self::priorities[$priority] . ': ' . $message, $args);
+    public static function Entry_Message(int $priority, string $message) {
+        $args = func_get_args();
+        $args = array_slice($args, 2);
+        $entry = vsprintf(self::$priorities[$priority] . ': ' . $message, $args);
         error_log($entry);
     }
 
     public static function Entry_Exception(int $priority, Exception $e) {
-        $entry = sprintf('%s: %s', self::priorities[$priority], $e->getMessage());
+        $entry = sprintf('%s: %s', self::$priorities[$priority], $e->getMessage());
         error_log($entry);
     }
 }

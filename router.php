@@ -13,6 +13,7 @@ require_once('input.php');
 require_once('output.php');
 require_once('log.php');
 require_once('string_helper.php');
+require_once('web_exception.php');
 
 class Router {
     public $Controllers_Directory = './controllers';
@@ -57,30 +58,50 @@ class Router {
     private function Internal_Invoke() {
         $controller_file = $this->Controllers_Directory . DIRECTORY_SEPARATOR . strtolower($this->Controller_Name) . '.php';
 
-        if (!is_readable($controller_file)) {
-            Log::Entry_Message(Log::ERROR, 'Controller file `%s` not found or not readable!', $controller_file);
-            Output::Response_Code_And_Exit(404);
+        // Controlled contexts starts here.
+        try {
+            if (!is_readable($controller_file)) {
+                // We should not report missing routings.
+                //Log::Entry_Message(Log::ERROR, 'Controller file `%s` not found or not readable!', $controller_file);
+                throw new Web_Exception("Not Found", 404);
+            }
+            else {
+                require_once($controller_file);
+
+                $actual_name = $this->Controller_Name . '_Controller';
+
+                if (!class_exists($actual_name)) {
+                    throw new Web_Exception("Not Found", 404);
+                }
+                else {
+                    try {
+                        $this->Controller = new $actual_name;
+
+                        if (!method_exists($this->Controller, $this->Controller_Method)) {
+                            throw new Web_Exception("Not Found", 404);
+                        }
+                        else {
+                            $this->Controller->{$this->Controller_Method}();
+                            Output::Flush();
+                        }
+                    }
+                    catch (Exception $e) {
+                        Log::Entry_Exception(Log::Error, $e);
+                        Output::Response_Code_And_Exit(404);
+                    }
+                }
+            }
         }
-        else {
-            require_once($controller_file);
-
-            $actual_name = $this->Controller_Name . '_Controller';
-
-            try {
-                $this->Controller = new $actual_name;
-                $this->Controller->{$this->Controller_Method}();
-                $out = Output::Instance();
-                $out->Flush();
-            }
-            catch (Exception $e) {
-                Log::Entry_Exception(Log::Error, $e);
-                Output::Response_Code_And_Exit(404);
-            }
+        catch (Web_Exception $e) {
+            $out = Output::Instance();
+            $out->Response_Code($e->code);
+            $out->Content($e->message);
+            $out->Flush();
         }
     }
 
     public static function Default_Names_Transform(string $name) : string {
         $split = String_Helper::Split_Trim($name, '-');
-        return implode(array_map(ucfirst, $split));
+        return implode(array_map(function ($w) { return ucfirst($w); }, $split));
     }
 }

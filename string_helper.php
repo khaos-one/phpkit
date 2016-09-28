@@ -17,5 +17,8 @@ class String_Helper {
         $split = explode($delimeter, $trimmed);
         return Array_Helper::Trim($split);
     }
+    public static function Starts_With(string $str, string $query) {
+        return substr($str, 0, strlen($query)) === $query;
+    }
 }
  

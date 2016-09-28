@@ -105,21 +105,15 @@ class Router {
                 throw new Web_Exception("Not Found", 404);
             }
             else {
-                try {
-                    $this->Controller = new $actual_name;
+                $this->Controller = new $actual_name;
 
-                    if (!method_exists($this->Controller, $this->Controller_Method)) {
-                        throw new Web_Exception("Not Found", 404);
-                    }
-                    else {
-                        $this->Controller->{$this->Controller_Method}();
-                        $out = Output::Instance();
-                        $out->Flush();
-                    }
+                if (!method_exists($this->Controller, $this->Controller_Method)) {
+                    throw new Web_Exception("Not Found", 404);
                 }
-                catch (Exception $e) {
-                    Log::Entry_Exception(Log::Error, $e);
-                    Output::Response_Code_And_Exit(404);
+                else {
+                    $this->Controller->{$this->Controller_Method}();
+                    $out = Output::Instance();
+                    $out->Flush();
                 }
             }
         }
